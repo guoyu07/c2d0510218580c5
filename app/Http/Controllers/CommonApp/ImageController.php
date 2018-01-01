@@ -40,7 +40,6 @@ class ImageController extends Controller
 
 
 
-
 	/*
 	| remove image data from data base
 	*/
