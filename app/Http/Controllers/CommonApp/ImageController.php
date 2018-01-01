@@ -29,7 +29,7 @@ class ImageController extends Controller
 
 		$data = ImgurController::call()->upload($file); // return array
 
-		return json_decode([
+		return json_encode([
 						'status' => 'stored successfully', 
 						'url' => array_get($data, 'url')
 					]);
