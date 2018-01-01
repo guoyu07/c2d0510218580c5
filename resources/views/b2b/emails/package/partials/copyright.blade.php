@@ -1,0 +1,1 @@
+<p style="font-size:13px;color:#ffffff;font-family:Arial,sans-serif;margin-top:10px;text-align: center;">© Copyright 2013, Fly Goldfinch. All right reserved.</p>

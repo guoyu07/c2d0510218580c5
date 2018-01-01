@@ -1,0 +1,71 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+	<title>Test</title>	
+
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-datepicker.css">
+
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="jquery-ui-2.js"></script>
+	<script type="text/javascript" src="bootstrap.min.js"></script>
+	<script type="text/javascript" src="bootstrap-datepicker.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var nowTemp = new Date();
+			var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+			checkInOut($('.dpd1a'), $('.dpd2a'), now);
+			checkInOut($('.dpd1b'), $('.dpd2b'), now);
+		});
+		
+		var checkInOut = function(inEl, outEl, now) {
+			var checkin = inEl.datepicker({
+				onRender: function(date) {
+					return date.valueOf() < now.valueOf() ? 'disabled' : '';
+				}
+			}).on('changeDate', function(ev) {
+				if (ev.date.valueOf() > checkout.date.valueOf()) {
+					var newDate = new Date(ev.date);
+					newDate.setDate(newDate.getDate() + 1);
+					checkout.setValue(newDate);
+				}
+				checkin.hide();
+				outEl.focus();
+			}).data('datepicker');
+			var checkout = outEl.datepicker({
+				onRender: function(date) {
+					return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+				}
+			}).on('changeDate', function(ev) {
+				checkout.hide();
+			}).data('datepicker');
+		};
+		
+	</script>
+</head>
+<body>
+	<div class="well">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Check in: <input type="text" class="span2 dpd1a" value="" data-date-format="dd-mm-yyyy"></th>
+					<th>Check out: <input type="text" class="span2 dpd2a" value="" data-date-format="dd-mm-yyyy"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+	<div class="well">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Check in: <input type="text" class="span2 dpd1b" value="" data-date-format="dd-mm-yyyy"></th>
+					<th>Check out: <input type="text" class="span2 dpd2b" value="" data-date-format="dd-mm-yyyy"></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+body { min-width: 1180px; }
+.wrapper { width: 1030px; }
+#sidebar-a { width: 230px; }
+#sidebar-b { width: 230px; }
+#maininner { width: 570px; }
+#menu .dropdown { width: 250px; }
+#menu .columns2 { width: 500px; }
+#menu .columns3 { width: 750px; }
+#menu .columns4 { width: 1000px; }
+.recentcomments a{
+	display:inline !important;
+	padding:0 !important;
+	margin:0 !important;
+}
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
