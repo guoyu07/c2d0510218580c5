@@ -31,7 +31,9 @@ class ImageController extends Controller
 
 		return json_encode([
 						'status' => 'stored successfully', 
-						'url' => array_get($data, 'url')
+						'url' => array_get($data, 'url'),
+						'path' => array_get($data, 'url'),
+						'host' => ''
 					]);
 
 		// $imagePath = imageUpload($request->file); // no longer use in own server saving to imgur
