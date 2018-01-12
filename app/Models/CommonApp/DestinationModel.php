@@ -22,6 +22,7 @@ class DestinationModel extends Model
 								'location', 'echo_location', 'viator_destination',
 								'tbo_destination'
 							];
+							
 	protected $hidden = ['created_at', 'updated_at'];
 
 
@@ -49,6 +50,7 @@ class DestinationModel extends Model
 
 		return $value;
 	}
+
 
 	public function getGeocodeAttribute($value)
 	{
@@ -128,6 +130,18 @@ class DestinationModel extends Model
 		if (!is_null($tag)) {
 			return $query->where('tags', 'like', '%'.$tag.'%');
 		}
+	}
+
+
+	public function scopeByCountryCode($query, $code)
+	{
+		return $query->where('country_code', $code);
+	}
+
+
+	public function scopeByDestination($query, $destination)
+	{
+		return $query->where('destination', $destination);
 	}
 
 

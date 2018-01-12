@@ -3,8 +3,9 @@
 namespace App\Models\CommonApp;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CommonApp\DestinationModel;
+use App\Traits\Models\CommonApp\AirportModelTrait;
 use App\Traits\CallTrait;
-use DB;
 
 class AirportModel extends Model
 {
@@ -12,7 +13,11 @@ class AirportModel extends Model
 
 	protected $connection = 'mysql2';
 	protected $table = 'airports';
-	protected $appends = ['location' ];
+	protected $appends = [
+									'location', 'destination_details', 
+									'latitude', 'longitude'
+								];
+
 
 	public function getLocationAttribute()
 	{
@@ -28,120 +33,30 @@ class AirportModel extends Model
 	}
 	
 
+
+	public function getDestinationDetailsAttribute()
+	{
+		return DestinationModel::byCountryCode($this->country_code)
+															->byDestination($this->city)
+																->first();
+	}
+
+
+	public function getLatitudeAttribute()
+	{
+		return isset($this->destination_details->latitude) 
+				 ? $this->destination_details->latitude
+				 : '';
+	}
 	
-	public function getAirport($search){
 
-		return DB::connection('mysql2')->select(
-							DB::raw("SELECT CONCAT(`airport_code`, ', ', `city`, ', ', `country`) AS `airports` FROM `airports` WHERE CONCAT(`airport_code`, ', ', `city`, ', ', `country`) LIKE '%$search%'")
-				);
-	}
-
-	public function getLocation($search)
+	public function getLongitudeAttribute()
 	{
-		$result = DB::connection('mysql2')->select(
-			DB::raw("SELECT CONCAT(a.`airport_code`, ', ', a.`airport_name`, ', ' , a.`city`, ', ', a.`country`,' | ', d.`destination`, ', ', d.`country`) AS `airports` FROM `airports` a JOIN `destinations` d ON d.`country_code` LIKE a.`country_code` AND d.`destination` LIKE a.`city` OR a.`city` LIKE d.`destination` WHERE a.`airport_code` = '$search' OR CONCAT(a.`airport_code`, ', ', a.`airport_name`, ', ', a.`city`, ', ', a.`country`) LIKE '%$search%' OR CONCAT(a.`airport_code`, ' ', a.`airport_name`, ' ', a.`city`, ' ', a.`country`) LIKE '%$search%'")
-		);
-		
-		return $result;
+		return isset($this->destination_details->longitude) 
+				 ? $this->destination_details->longitude
+				 : '';;
 	}
 
-	/*
-	| this function is return and array
-	| ["Airport_Code, Airport_Name, Destination_Or_City_Name, Country_Name"]
-	*/
-	public function getAirportAndLocation($search)
-	{
-		$sqlQuery = (
-			"SELECT CONCAT
-			  (
-			    a.`airport_code`, ', ',
-			    a.`airport_name`, ', ',
-			    IFNULL(d.`destination`, a.`city`),  ', ',
-			    IFNULL(d.`country`, a.`country`)
-			  ) AS `airports`
-			FROM
-			  `airports` a
-			LEFT JOIN
-			  `destinations` d 
-			  ON d.`country_code` = a.`country_code` 
-			  AND (d.`destination` LIKE a.`city` OR a.`city` LIKE d.`destination`)
-			WHERE "
-		);
 
-		if (strlen($search) <= 3) {
-			$sqlQuery .= "a.`airport_code` = '$search'";
-		}
-		else{
-			$sqlQuery .= (
-				"CONCAT(
-			    a.`airport_code`,', ',
-			    a.`airport_name`,', ',
-			    a.`city`,', ',
-			    a.`country`
-			  ) LIKE '%$search%' 
-
-				OR CONCAT(
-				  a.`airport_code`,' ',
-				  a.`airport_name`,' ',
-				  a.`city`,' ',
-				  a.`country`
-				) LIKE '%$search%'"
-			);
-		}
-		$sqlQuery .= 'limit 10';
-		
-		$result = DB::connection('mysql2')->select(DB::raw($sqlQuery));
-		return $result;
-	}
-
-	public function getAirportNames($search)
-	{
-		$sqlQuery = (
-			"SELECT CONCAT
-			  (
-			    a.`airport_code`, ', ',
-			    a.`airport_name`, ', ',
-			    IFNULL(d.`destination`, a.`city`),  ', ',
-			    IFNULL(d.`country`, a.`country`)
-			  ) AS `fullname`, a.`airport_code`, a.`airport_name`, 
-			  IFNULL(d.`destination`, a.`city`) AS city, 
-			  IFNULL(d.`country`, a.`country`) AS country
-			FROM
-			  `airports` a
-			LEFT JOIN
-			  `destinations` d 
-			  ON d.`country_code` = a.`country_code` 
-			  AND (d.`destination` LIKE a.`city` OR a.`city` LIKE d.`destination`)
-			WHERE "
-		);
-
-		if (strlen($search) <= 3) {
-			$sqlQuery .= "a.`airport_code` = '$search'";
-		}
-		else{
-			$sqlQuery .= (
-				"CONCAT(
-			    a.`airport_code`,', ',
-			    a.`airport_name`,', ',
-			    a.`city`,', ',
-			    a.`country`
-			  ) LIKE '%$search%' 
-
-				OR CONCAT(
-				  a.`airport_code`,' ',
-				  a.`airport_name`,' ',
-				  a.`city`,' ',
-				  a.`country`
-				) LIKE '%$search%'"
-			);
-		}
-
-		$sqlQuery .= 'limit 10';
-		$result = DB::connection('mysql2')
-							->select(DB::raw($sqlQuery));
-		return $result;
-	}
-
-	
 
 }
