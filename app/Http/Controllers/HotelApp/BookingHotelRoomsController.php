@@ -49,6 +49,7 @@ class BookingHotelRoomsController extends Controller
 						'id' => $room->id,
 						'vendor' => 'b',
 						'roomtype' => $room->roomtype,
+						'property_type' => $room->roomtype,
 					];
 			}
 		}
