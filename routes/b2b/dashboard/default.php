@@ -29,6 +29,29 @@
 		Route::resource('contacts', 'ContactsController');
 	});
 
+	Route::group(['prefix' => 'vouchers'], function (){
+		Route::post('client/info', 'VoucherController@postClientInfo')
+						->name('vouchers.client_info');
+
+		Route::post('show/accommodation', 'VoucherController@postShowAccommodation')->name('vouchers.show_accommodation');
+
+		Route::post('store/data', 'VoucherController@postStoreData')
+					->name('vouchers.store_data');
+
+		Route::get('show/{token}/pdf', 'VoucherController@showPDF')
+						->name('vouchers.showPDF');
+
+		Route::get('show/{token}', 'VoucherController@show')
+						->name('vouchers.show');
+
+		Route::get('activity', 'VoucherController@createActivityVoucher')
+						->name('vouchers.create.activity');
+
+		Route::get('accommodation', 'VoucherController@createAccommodationVoucher')->name('vouchers.create.accommodation');
+
+		Route::get('/', 'VoucherController@index');
+	});
+
 	Route::group(['prefix' => 'monitoring'], function (){
 		Route::get('packages', 'TrackPackageController@index')
 					->name('packages.track');

@@ -44,9 +44,29 @@
 								<li class="hide"><a href="{{ url('dashboard/tools') }}">Tools</a></li>
 							<li><a href="{{ url('dashboard/tools/calendar') }}">Calendar</a></li>
 							<li><a href="{{ url('dashboard/tools/contacts') }}">Contact List</a></li>
-							{{-- <li><a href="{{ url('dashboard/tools/invoice') }}">Invoice</a></li>
+							<li><a href="{{ url('dashboard/tools/invoice') }}">Invoice</a></li>
 							<li><a href="{{ url('dashboard/tools/inbox') }}">Inbox</a></li>
-							<li><a href="{{ url('dashboard/tools/vouchers') }}">Vouchers</a></li> --}}
+							{{-- <li><a href="{{ url('dashboard/tools/vouchers') }}">Vouchers</a></li> --}}
+						</ul>
+					</li>
+					<li><a><i class="fa fa-file-pdf-o"></i> Vouchers<span class="fa fa-chevron-down"></span></a>
+						<ul class="nav child_menu">
+							<li>
+								<a href="{{ url('dashboard/vouchers') }}">List</a>
+							</li>
+							<?php 
+								$pageNames = [
+										"accommodation" => "Accommodation",
+										"activity" => "Activity",
+									];
+							?>
+							@foreach ($pageNames as $pageNameKey => $pageName)
+								<li>
+									<a href="{{ url('dashboard/vouchers/'.$pageNameKey) }}">
+										{{ $pageName }}
+									</a>
+								</li>
+							@endforeach
 						</ul>
 					</li>
 					<li><a><i class="fa fa-desktop"></i> Monitoring<span class="fa fa-chevron-down"></span></a>

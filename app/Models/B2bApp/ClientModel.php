@@ -12,7 +12,7 @@ class ClientModel extends Model
 	use CallTrait;
 
 	protected $table = 'clients';
-	protected $appends = ['uid', 'assign_to'];
+	protected $appends = ['uid', 'assign_to', 'built_data'];
 
 	public function getUidAttribute()
 	{
@@ -35,6 +35,17 @@ class ClientModel extends Model
 		return isset($this->user->assign_to) 
 				 ? $this->user->assign_to
 				 : '';
+	}
+
+
+	public function getBuiltDataAttribute()
+	{
+		return [
+				'token' => $this->token,
+				'name' => $this->fullname,
+				'mobile' => $this->mobile,
+				'email' => $this->email,
+			];
 	}
 
 
@@ -85,6 +96,7 @@ class ClientModel extends Model
 	}
 
 
+
 	public function scopeMobileOrEmail($query, $mobile, $email)
 	{
 		return $query->where(function ($q) use ($mobile, $email){
@@ -103,6 +115,12 @@ class ClientModel extends Model
 	public function scopeByStatus($query, $status)
 	{
 		return $query->where("status", "=", $status);
+	}
+
+
+	public function scopeByMobileSearch($query, $mobile)
+	{
+		return $query->where("mobile", "like", $mobile.'%');
 	}
 
 
