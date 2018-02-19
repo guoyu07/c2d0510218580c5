@@ -57,7 +57,7 @@
 							<?php 
 								$pageNames = [
 										"accommodation" => "Accommodation",
-										"activity" => "Activity",
+										// "activity" => "Activity",
 									];
 							?>
 							@foreach ($pageNames as $pageNameKey => $pageName)

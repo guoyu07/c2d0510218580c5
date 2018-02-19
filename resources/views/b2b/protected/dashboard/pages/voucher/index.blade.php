@@ -51,7 +51,7 @@
 									<td>{{ $voucher->updated_at }}</td>
 									<td>{{ $voucher->status }}</td>
 									<td>
-										<a href="{{ $voucher->voucher_url }}" class="btn btn-success btn-xs btn-block">Open</a>
+										<a href="{{ $voucher->voucher_url }}" class="btn btn-success btn-xs btn-block" target="_blank">Open</a>
 									</td>
 								</tr>
 							@endforeach

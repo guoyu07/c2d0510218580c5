@@ -39,7 +39,7 @@ class VoucherModel extends Model
 
 	public function getVoucherUrlAttribute()
 	{
-		return route('voucher.show', $this->token);
+		return route('vouchers.showPDF', $this->token);
 	}
 
 
