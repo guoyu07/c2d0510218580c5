@@ -28,10 +28,20 @@
 			border-width: 1px;
 			border-color: #000;
 		}
-		.hr-line{
-			border-width: 1px;
-			border-color: #ebebeb;
+		.hr-line-gray{
+			height: 1px;
+			color: #0ca1cf;
+			background-color: #ebebeb;
+			border: none;
 		}
+		.hr-line-blue{
+			height: 1px;
+			color: #0ca1cf;
+			background-color: #0ca1cf;
+			border: none;
+		}
+
+		
 		.m-top-5{ margin-top: 5px;}
 		.m-top-10{ margin-top: 10px;}
 		.m-top-20{ margin-top: 20px;}
@@ -84,7 +94,10 @@
 			<div>{{ $data->remark }}</div>
 			<div class="m-top-20"></div>
 			<h2>{{ array_get($data->data, 'name') }}</h2>
-			<div>{{ $data->check_in->format('d-M-Y') }} - {{ $data->check_out->format('d-M-Y') }} | ID #{{ $data->uid }} | Confirmation No. #HDJKKS78K</div>
+			<div><small>{{ $data->check_in->format('d-M-Y') }} - {{ $data->check_out->format('d-M-Y') }} | ID #{{ $data->uid }}
+			@if(array_get($data->data, 'confirmation_no', false))
+			 | Confirmation No. {{ array_get($data->data, 'confirmation_no', '') }}
+			@endif</small></div>
 			<div class="m-top-20"></div>
 			<table class="width-100p">
 				<tr>
@@ -93,11 +106,17 @@
 						<table>
 							<tr class="p-tr">
 								<td colspan="2">
-									{{ array_get($data->data, 'name') }}. <br>
+									<b>{{ array_get($data->data, 'name') }}. </b><br>
 									{!! getStarImage($data->accommodation_details->star_rating, 13, 13) !!}
+									<br>
 								</td>
 							</tr>
-							<tr class="p-tr m-top-5">
+							<tr class="p-tr">
+								<td colspan="2">
+									<br>
+								</td>
+							</tr>
+							<tr class="p-tr">
 								<td>
 									{{ $data->check_in->format('d-M-Y') }} <br>
 									<small>Check-in</small>
@@ -113,7 +132,7 @@
 				</tr>
 			</table>
 			<div>
-				<hr class="hr-gray-line">
+				<hr class="hr-line-blue">
 				<table class="width-100p">
 					<tr>
 						<td width="60%">{{ $data->accommodation_details->address }}</td>
@@ -122,7 +141,7 @@
 				</table>
 			</div>
 			<div>
-				<hr class="hr-gray-line">
+				<hr class="hr-line-blue">
 				<div class="m-top-10"></div>
 				<div>
 					@foreach($data->guests as $key => $guest)
@@ -136,7 +155,7 @@
 				</div>
 				<div class="m-top-20"></div>
 
-				<hr class="hr-gray-line">
+				<hr class="hr-line-blue">
 				<h3><u>Cancellation policy</u></h3>
 				<div style="color:red;">
 					{{ $data->terms }}

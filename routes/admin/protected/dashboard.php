@@ -40,7 +40,8 @@
 			Route::group(['prefix' => 'activity'], function(){
 				Route::post('{id}/delete/{iid}', 'ActivitiesController@destroyImage');
 				Route::post('store_ranks', 'ActivitiesController@storeOrUpdateRanks');
-				Route::get('store/{id?}', 'ActivitiesController@createOrEdit');
+				Route::get('store/{id?}', 'ActivitiesController@createOrEdit')
+								->name('inventories.activity.store');
 				Route::post('store', 'ActivitiesController@storeOrUpdate');
 				Route::put('{id}/deactivate', 'ActivitiesController@deactivate');
 				Route::put('{id}/activate', 'ActivitiesController@activate');

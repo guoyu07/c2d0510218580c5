@@ -84,6 +84,7 @@
 
 
 	$(document).on('keypress', '.location', function(e) {
+
 		$(this).autocomplete({
 			minLength: 3,
 			source: '{{ route('destination.names') }}',
@@ -99,6 +100,14 @@
 										.attr('data-code', _.get(ui, 'item.airport_code', _.get(ui, 'item.code', '')))
 											.removeClass('inctv')
 												.removeClass('border-red');
+
+				var parent = $(this).closest('.popup-box');
+
+				if ($(parent).find('.service-type').val() == 'activity') {
+					var href = $(parent).find('.btn-create-activity')
+																.attr('data-href');
+					$(parent).find('.btn-create-activity').attr('href', href+'?city='+_.get(ui, 'item.code', ''));
+				}
 
 				return false;
 			}

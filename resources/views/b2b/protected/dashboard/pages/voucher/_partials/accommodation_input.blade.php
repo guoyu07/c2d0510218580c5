@@ -33,21 +33,23 @@
 					<span class="fa fa-bookmark-o form-control-feedback right" aria-hidden="true"></span>
 				</div>
 				<div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-					<div class="col-md-2 col-sm-2 col-xs-2 m-top-5">
-						<label class="m-top-2">Rooms :</label>
-					</div>
-					<div class="col-md-2 col-sm-2 col-xs-2 m-top-5 room-box">
-						<div class="row">
-							<div class="col-md-9 col-sm-9 col-xs-9 nopadding p-right-5">
-								<input type="text" class="form-control adults height-25 p-2-5" placeholder="Adults" value="2">
-							</div>
-							<!-- <div class="col-md-3 col-sm-3 col-xs-3 nopadding m-top-2">
-								<a class="cursor-pointer remove-room"><i class="fa fa-times"></i></a>
-							</div> -->
+					<div class="row">
+						<div class="col-md-2 col-sm-2 col-xs-2 m-top-5">
+							<label class="m-top-2">Rooms :</label>
 						</div>
-					</div>
-					<div class="col-md-1 col-sm-1 col-xs-1 box-add-room m-top-5">
-						<button class="btn btn-success btn-xs btn-add-room m-top-2"><i class="fa fa-plus"></i></button>
+						<div class="col-md-2 col-sm-2 col-xs-2 m-top-5 room-box">
+							<div class="row">
+								<div class="col-md-9 col-sm-9 col-xs-9 nopadding p-right-5">
+									<input type="text" class="form-control adults height-25 p-2-5" placeholder="Adults" value="2">
+								</div>
+								<!-- <div class="col-md-3 col-sm-3 col-xs-3 nopadding m-top-2">
+									<a class="cursor-pointer remove-room"><i class="fa fa-times"></i></a>
+								</div> -->
+							</div>
+						</div>
+						<div class="col-md-1 col-sm-1 col-xs-1 box-add-room m-top-5">
+							<button class="btn btn-success btn-xs btn-add-room m-top-2"><i class="fa fa-plus"></i></button>
+						</div>
 					</div>
 				</div>
 				<label class="col-md-3 col-sm-3 col-xs-12">Meal : </label>

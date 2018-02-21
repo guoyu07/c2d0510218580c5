@@ -46,9 +46,9 @@
 				<button class="btn btn-default btn-block">Cancel</button>
 			</div> -->
 
-			{{-- <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+			<div class="col-md-2 col-sm-2 col-xs-12 pull-right">
 				<button class="btn btn-primary btn-activity btn-block">Add Activity</button>
-			</div> --}}
+			</div>
 			<div class="col-md-2 col-sm-2 col-xs-12 pull-right">
 				<button class="btn btn-primary btn-accommodation">Add Accommodation</button>
 			</div>
@@ -59,6 +59,7 @@
 <div class="hide">
 	@include('b2b.protected.dashboard.pages.voucher._partials.client_input')
 	@include('b2b.protected.dashboard.pages.voucher._partials.accommodation_input')
+	@include('b2b.protected.dashboard.pages.voucher._partials.activity_input')
 </div>
 
 @endsection
@@ -172,7 +173,7 @@
 				thisObj = this;
 				var content = `<hr>
 				<div class="max-height-350px min-height-100px scroll-auto scroll-bar">
-					<div class="col-md-12 col-sm-12 col-xs-12 accommodation-popup-box">
+					<div class="col-md-12 col-sm-12 col-xs-12 popup-box accommodation-popup-box">
 						`+$('.temp-service-child-box').html()+`
 					</div>
 				</div>`;
@@ -190,6 +191,167 @@
 							btnClass: 'btn-primary',
 							action: function(){
 								popUpBox = $('.accommodation-popup-box');
+
+								$(popUpBox).find('.border-red').removeClass('border-red');
+								var dest_id = $(popUpBox).find('.location')
+																						.attr('data-code');
+								if (dest_id == '') {
+									$(popUpBox).find('.location')
+											.addClass('border-red').effect('shake');
+									return false;
+								}
+
+								var check_in = $(popUpBox).find('.check-in').val();
+								if (check_in == '') {
+									$(popUpBox).find('.check-in')
+											.addClass('border-red').effect('shake');
+									return false;
+								}
+
+								var check_out = $(popUpBox).find('.check-out').val();
+								if (check_out == '') {
+									$(popUpBox).find('.check-out')
+											.addClass('border-red').effect('shake');
+									return false;
+								}
+
+								var name = $(popUpBox).find('.accommo-name').val();
+								var code = $(popUpBox).find('.accommo-name')
+																				.attr('data-code');
+								var vendor = $(popUpBox).find('.accommo-name')
+																					.attr('data-vendor');
+
+								if (name == '' || code == '' || vendor == '') {
+									$(popUpBox).find('.accommo-name')
+											.addClass('border-red').effect('shake');
+									return false;
+								}
+
+								var prop_type = $(popUpBox).find('.prop-type').val();
+
+								if (prop_type == '') {
+									$(popUpBox).find('.prop-type')
+											.addClass('border-red').effect('shake');
+									return false;
+								}
+								guests = [];
+								isGuestOk = true;
+								$(popUpBox).find('.room-box .adults').each(function (i, v) {
+									var adults = $(this).val();
+									if (adults < 1) {
+										isGuestOk = false;
+										$(this).addClass('border-red').effect('shake');
+										return false;
+									}
+									guests.push({
+										"room" : i+1,
+										"adults" : adults
+									});
+								});
+
+								if (!isGuestOk) { return false; }
+
+								data = {
+									'_token' : csrf_token,
+									'vtoken' : thisObj.vtoken,
+									'ctoken' : thisObj.ctoken,
+									'type' : $(popUpBox).find('.service-type').val(),
+									'dest_id' : dest_id,
+									'check_in' : check_in,
+									'check_out' : check_out,
+									'data' : {
+											'name' : name,
+											'code' : code,
+											'vendor' : vendor,
+											'image' : $(popUpBox).find('.accommo-name').attr('data-image'),
+											'confirmation_no' : $(popUpBox).find('.confirmation-no').val(),
+											'prop_type' : prop_type,
+											'room_only' : + $(popUpBox).find('.meal.lunch').prop('checked'),
+											'lunch' : + $(popUpBox).find('.meal.lunch').prop('checked'),
+											'breakfast' : + $(popUpBox).find('.meal.breakfast').prop('checked'),
+											'dinner' : + $(popUpBox).find('.meal.dinner').prop('checked'),
+										},
+									'guests' : guests,
+									'terms' : $(popUpBox).find('.cancellation_policy').val(),
+									'remark' : $(popUpBox).find('.remark').val()
+								};
+								
+								$.ajax({
+									type : "POST",
+									url : "{{ route('vouchers.store_data') }}",
+									data : data,
+									dataType : "JSON",
+									success : function (res) {
+										$('.main-service-box').append(`<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="x_panel">
+												<div class="x_title">
+													<div class="col-md-5 col-sm-5 col-xs-5">
+														<h2>Accommodation</h2>
+													</div>
+													<div class="col-md-7 col-sm-7 col-xs-7">
+														<label class="pull-right">Confirmation No: `+_.get(data, 'data.confirmation_no', '?')+`</label>
+													</div>
+													<div class="clearfix"></div>
+												</div>
+												<div class="x_content">
+													<div class="row">
+														<div class="col-md-12 col-sm-12 col-xs-12">
+															<h2>`+name+`</h2>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-12 col-sm-12 col-xs-12">
+															`+check_in+` - `+check_out+`
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-12 col-sm-12 col-xs-12">
+															<label>Property Type : `+prop_type+`</label>
+														</div>`+thisObj.getGuestString(guests)+`</div>
+													<div class="row">
+														<div class="col-md-12 col-sm-12 col-xs-12 m-top-10">
+															<a href="{{ url('dashboard/vouchers/show/pdf') }}/`+_.get(res, 'vstoken', '')+`" class="btn btn-success" target="_blank">Get Voucher</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>`);
+
+										$('.btn-finish.btn-dark').addClass('btn-success')
+												.removeClass('btn-dark').removeAttr("disabled")
+													.attr('href', '{{ url('dashboard/vouchers/show') }}/'+_.get(res, 'vtoken', ''));
+									}
+								});
+							}
+						},
+						cancel: function () {
+						}
+					}
+				});
+			},
+			
+			showActivityPopUp : function () {
+				thisObj = this;
+				var content = `<hr>
+				<div class="max-height-350px min-height-100px scroll-auto scroll-bar">
+					<div class="col-md-12 col-sm-12 col-xs-12 popup-box activity-popup-box">
+						`+$('.temp-activity-service-child-box').html()+`
+					</div>
+				</div>`;
+
+				$.confirm({
+					title : "Add activity voucher",
+					columnClass: 'col-md-9 col-md-offset-2',
+					content : content,
+					onContentReady : function () {
+						var popUpBox = $('.activity-popup-box');
+						thisObj.initDatePicker(popUpBox);
+					},
+					buttons: {
+						submit: {
+							btnClass: 'btn-primary',
+							action: function(){
+								popUpBox = $('.activity-popup-box');
 
 								$(popUpBox).find('.border-red').removeClass('border-red');
 								var dest_id = $(popUpBox).find('.location')
@@ -550,6 +712,10 @@
 			windata.showAccommodationPopUp();
 			// windata.addAccommodationBox();
 
+		});
+
+		$(document).on('click', '.btn-activity', function(){
+			windata.showActivityPopUp();
 		});
 
 		$(document).on('click', '.btn-save', function(){
