@@ -16,18 +16,8 @@ class B2bCreateVouchersTable extends Migration
         Schema::create('vouchers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('token', 32)->unique();
-            $table->string('type', 20)->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->integer('client_id')->unsigned()->nullable();
-            $table->integer('destination_id')->unsigned()->nullable();
-            $table->date('check_in')->nullable();
-            $table->date('check_out')->nullable();
-            $table->text('terms')->nullable();
-            $table->text('remark')->nullable();
-            $table->text('guests')->nullable();
-            $table->text('data')->nullable();
-            $table->integer('service_id')->unsigned()->nullable();
-            $table->string('service_type')->nullable();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

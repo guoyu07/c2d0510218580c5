@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\B2bApp\VoucherModel;
+use App\Models\B2bApp\VoucherServiceModel;
 use App\Models\B2bApp\ClientModel;
 use App\Http\Controllers\B2bApp\PdfController;
 use App\Http\Controllers\HotelApp\HotelsController;
@@ -33,39 +34,76 @@ class VoucherController extends Controller
 	public function show($token)
 	{
 		$voucher = $this->model()->byToken($token)->firstOrFail();
-		return view($this->viewPath.'.html.voucher', ['data' => $voucher]);
+		return view($this->viewPath.'.show', ['data' => $voucher]);
 	}
 
 
 	public function showPDF($token)
 	{
-		$voucher = $this->model()->byToken($token)->firstOrFail();
+		$voucher = VoucherServiceModel::byToken($token)->firstOrFail();
+		// dd($voucher->accommodation_details->star_rating);
 		$html = view($this->viewPath.'.html.voucher', ['data' => $voucher])->render();
+		// return $html;
 		return PdfController::call()->createPdf($voucher->uid, $html);
 	}
 
 
+	public function create()
+	{
+		return view($this->viewPath.'.create');
+	}
+
+
+	public function postClientAdd(Request $request)
+	{
+		$token = null;
+
+		if (is_null($request->ctoken)) {
+			$client = new ClientModel;
+			$client->fullname = $request->name;
+			$client->mobile = $request->mobile;
+			$client->email = $request->email;
+			$client->save();
+			$token = $client->token;
+		}
+
+		return json_encode(['token' => $token]);
+	}
+
 	public function postStoreData(Request $request)
 	{
+		$voucher = $this->model()->find($request->vtoken);
+		
+		if (is_null($voucher)) {
+			$client = ClientModel::byToken($request->ctoken)->firstOrFail();
+			$voucher = $this->model();
+			$voucher->client_id = $client->id;
+			$voucher->save();
+		}
 
-		$client = ClientModel::byToken($request->ctoken)->firstOrFail();
+		$service = $request->all();
 
-		$newModel = $this->model();
-		$newModel->type = $request->type;
-		$newModel->user_id = auth()->user()->id;
-		$newModel->client_id = $client->id;
-		$newModel->destination_id = $request->dest_id;
-		$newModel->check_in = Carbon::createFromFormat('d/m/Y', 
-													$request->check_in)->format('Y-m-d');
-		$newModel->check_out = Carbon::createFromFormat('d/m/Y', 
-													$request->check_out)->format('Y-m-d');
-		$newModel->terms = $request->terms;
-		$newModel->remark = $request->remark;
-		$newModel->guests = $request->guests;
-		$newModel->data = $request->data;
-		$newModel->save();
+		// foreach ($request->services as $service) {
+		$voucherService = new VoucherServiceModel;
+		$voucherService->type = array_get($service, 'type');
+		$voucherService->voucher_id = $voucher->id;
+		$voucherService->destination_id = array_get($service, 'dest_id');
+		$voucherService->check_in = Carbon::createFromFormat('d/m/Y', 
+																array_get($service, 'check_in'))->format('Y-m-d');
+		$voucherService->check_out = Carbon::createFromFormat('d/m/Y', 
+																array_get($service, 'check_out'))->format('Y-m-d');
+		$voucherService->terms = array_get($service, 'terms');
+		$voucherService->remark = array_get($service, 'remark');
+		$voucherService->guests = array_get($service, 'guests');
+		$voucherService->data = array_get($service, 'data');
+		$voucherService->save();
+		// }
 
-		return ['token' => $newModel->token];
+
+		return json_encode([
+						'vtoken' => $voucher->token, 
+						'vstoken' => $voucherService->token
+					]);
 	}
 
 
@@ -100,6 +138,19 @@ class VoucherController extends Controller
 		}
 
 		return json_encode($hotels);
+	}
+
+
+	public function postShowAccommodationProperties(Request $request)
+	{
+		$request->validate([
+				'vendor' => 'required',
+				'id' => 'required'
+			]);
+
+		$props = HotelsController::call()->hotelRooms($request->all());
+		$props = array_get($props, 'rooms');
+		return json_encode($props);
 	}
 
 

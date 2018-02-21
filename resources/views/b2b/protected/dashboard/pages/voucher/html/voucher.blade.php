@@ -4,6 +4,9 @@
 	<meta charset="UTF-8">
 	<title>Hotel Voucher</title>
 	<style>
+		html *{
+			font-family : Arial !important;
+		}
 		body{
 			top:0;
 			right:0;
@@ -12,8 +15,14 @@
 			margin: 0;
 			padding: 0;
 		}
+		@page {
+	    margin-top: 60px;
+	    margin-bottom: 60px;
+	    margin-left: 50px;
+	    margin-right: 60px;
+		}
 		.box{
-			padding: 50px;
+			/* padding: 50px; */
 		}
 		.hr-line{
 			border-width: 1px;
@@ -23,12 +32,9 @@
 			border-width: 1px;
 			border-color: #ebebeb;
 		}
-		.m-top-5{
-			margin-top: 10px;
-		}
-		.m-top-20{
-			margin-top: 20px;
-		}
+		.m-top-5{ margin-top: 5px;}
+		.m-top-10{ margin-top: 10px;}
+		.m-top-20{ margin-top: 20px;}
 		.img-thumb{
 			width: 100%;
 			height: 150px;
@@ -55,18 +61,30 @@
 <body>
 	<div class="box">
 		<div>
-			<h3>{{ $data->user->admin->companyname }}</h3>
-			<div>{!! str_replace("\n", "<br/>", $data->user->admin->address) !!}</div>
+			<table class="width-100p">
+				<tr>
+					<td width="80%">
+						<div>
+							<div><b style="font-size: 20px;">{{ $data->voucher->user->admin->companyname }}</b> </div>
+							<br>
+							<div class="m-top-20">{!! str_replace("\n", "<br/>", $data->voucher->user->admin->address) !!}</div>
+						</div>
+					</td>
+					<td width="20%" style="text-align: right;">
+						<img src="{{ $data->voucher->user->admin->profile_pic }}" style="float: right;" height="80">
+					</td>
+				</tr>
+			</table>
+			<!-- <div><br> <small></small></div> -->
 			<div class="m-top-20"></div>
 			<hr class="hr-line">
 		</div>
 		<div>
 			<h3>Your Reservation is Confirmed!</h3>
-			<div>{{ $data->user->admin->companyname }} special rate. Thanx for continuous support <br>
-			{{ $data->remark }}</div>
+			<div>{{ $data->remark }}</div>
 			<div class="m-top-20"></div>
 			<h2>{{ array_get($data->data, 'name') }}</h2>
-			<div>{{ $data->check_in->format('d-M-Y') }} - {{ $data->check_out->format('d-M-Y') }} | ID #{{ $data->uid }}</div>
+			<div>{{ $data->check_in->format('d-M-Y') }} - {{ $data->check_out->format('d-M-Y') }} | ID #{{ $data->uid }} | Confirmation No. #HDJKKS78K</div>
 			<div class="m-top-20"></div>
 			<table class="width-100p">
 				<tr>
@@ -75,18 +93,18 @@
 						<table>
 							<tr class="p-tr">
 								<td colspan="2">
-									{{ array_get($data->data, 'name') }} <br>
-									{!! getStarImage(4, 13, 13) !!}
+									{{ array_get($data->data, 'name') }}. <br>
+									{!! getStarImage($data->accommodation_details->star_rating, 13, 13) !!}
 								</td>
 							</tr>
-							<tr class="p-tr">
+							<tr class="p-tr m-top-5">
 								<td>
 									{{ $data->check_in->format('d-M-Y') }} <br>
 									<small>Check-in</small>
 								</td>
 								<td> </td>
 								<td>
-									{{ $data->check_in->format('d-M-Y') }} <br>
+									{{ $data->check_out->format('d-M-Y') }} <br>
 									<small>Check-out</small>
 								</td>
 							</tr>
@@ -95,13 +113,22 @@
 				</tr>
 			</table>
 			<div>
-				<div class="m-top-20"></div>
 				<hr class="hr-gray-line">
+				<table class="width-100p">
+					<tr>
+						<td width="60%">{{ $data->accommodation_details->address }}</td>
+						<td width="40%"></td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<hr class="hr-gray-line">
+				<div class="m-top-10"></div>
 				<div>
 					@foreach($data->guests as $key => $guest)
-						<h4>Room : {{ $key+1 }}</h4>
-						<div>{{ array_get($data->data, 'prop_type') }}</div>
-						<div>Reserved for: {{ $data->client->fullname }} <br>
+						<h4>Room : {{ $key+1 }} <small>{{ $data->mealsString() }}</small></h4>
+						<div></div>
+						<div>Reserved for: {{ $data->voucher->client->fullname }} <br>
 							<small>{{ array_get($guest, 'adults') }} adults</small>
 						</div>
 
@@ -110,19 +137,21 @@
 				<div class="m-top-20"></div>
 
 				<hr class="hr-gray-line">
-				<h2>Cancellation policy</h2>
-				<div>
+				<h3><u>Cancellation policy</u></h3>
+				<div style="color:red;">
 					{{ $data->terms }}
 				</div>
-				<h2>Disclaimer</h2>
+				<div class="m-top-20"></div>
 				<div>
-					Bedding request subject to availability and on hotels discreation <br>
-
-					Early check-in and late check-out are subject to availability and on hotels discreation<br>
-
-					Under no circumstance shall we be liable for the above request<br>
-
-					Free breakfast if any will be servered only after completion of 1st night
+					<b>Booking Terms & Conditions</b>
+						<ul>
+							<li><small>You must present a photo ID at the time of check in. Hotel may ask for credit card or cash deposit for the extra services at the time of check in.</small></li>
+							<li><small>All extra charges should be collected directly from clients prior to departure such as parking, phone calls, room service, city tax, etc.</small></li>
+							<li><small>We don't accept any responsibility for additional expenses due to the changes or delays in air, road, rail, sea or indeed of any other causes, all such expenses will have to be borne by passengers.</small></li>
+							{{-- <li><small>In case of wrong residency & nationality selected by user at the time of booking; the supplement charges may be applicable and need to be paid to the hotel by guest on check in/ check out.</small></li> --}}
+							<li><small>Any special request for bed type, early check in, late check out, smoking rooms, etc are not guaranteed as subject to availability at the time of check in.</small></li>
+							<li><small>Early check out will attract full cancellation charges unless otherwise specified.</small></li>
+						</ul>
 				</div>
 			</div>
 		</div>

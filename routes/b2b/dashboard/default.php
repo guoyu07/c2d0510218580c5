@@ -33,23 +33,33 @@
 		Route::post('client/info', 'VoucherController@postClientInfo')
 						->name('vouchers.client_info');
 
+		Route::post('client/add', 'VoucherController@postClientAdd')
+						->name('vouchers.client_add');
+
 		Route::post('show/accommodation', 'VoucherController@postShowAccommodation')->name('vouchers.show_accommodation');
+
+		Route::post('show/accommodation/properties', 'VoucherController@postShowAccommodationProperties')->name('vouchers.show_accommodation_props');
 
 		Route::post('store/data', 'VoucherController@postStoreData')
 					->name('vouchers.store_data');
 
-		Route::get('show/{token}/pdf', 'VoucherController@showPDF')
+		Route::get('show/pdf/{token}', 'VoucherController@showPDF')
 						->name('vouchers.showPDF');
 
 		Route::get('show/{token}', 'VoucherController@show')
 						->name('vouchers.show');
+
+		Route::get('create', 'VoucherController@create')
+						->name('vouchers.create');
+
 
 		Route::get('activity', 'VoucherController@createActivityVoucher')
 						->name('vouchers.create.activity');
 
 		Route::get('accommodation', 'VoucherController@createAccommodationVoucher')->name('vouchers.create.accommodation');
 
-		Route::get('/', 'VoucherController@index');
+		Route::get('/', 'VoucherController@index')
+						->name('vouchers.index');
 	});
 
 	Route::group(['prefix' => 'monitoring'], function (){

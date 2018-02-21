@@ -1,6 +1,9 @@
 <script>
 	$(document).on('keyup paste', '.accommo-name', function(e) {
-		var dest_id = $('.location').attr('data-code');
+		var dest_id = $('.accommodation-popup-box')
+										.find('.location').attr('data-code');
+
+		// var serviceChildBox = $(this).closest('.service-child-box');
 
 		$(this).autocomplete({
 			minLength: 4,
@@ -27,12 +30,53 @@
 								.attr('data-code', _.get(ui, 'item.code', ''))
 									.attr('data-image', _.get(ui, 'item.image', ''))
 										.attr('data-vendor', _.get(ui, 'item.vendor', ''));
+
 				return false;
 			}
 		})
 		.autocomplete().data("ui-autocomplete")._renderItem =  function( ul, item ) {
 			return $( "<li>" )
 			.append( "<a>" + _.get(item, 'name', '') + "</a>" )
+			.appendTo( ul );
+		};
+	});
+
+	$(document).on('keyup paste', '.prop-type', function(e) {
+		var parent = $(this).closest('.accommodation-popup-box');
+		var accommo = $(parent).find('input.accommo-name');
+
+		$(this).autocomplete({
+			minLength: 4,
+			source: function (request, response) {
+				request = $.extend(request, {
+					'format' : 'json',
+					'_token' : csrf_token,
+					'id' : $(accommo).attr('data-code'),
+					'vendor' : $(accommo).attr('data-vendor')
+				});
+		    $.ajax({
+				  type: "POST",
+				  url:"{{ route('vouchers.show_accommodation_props') }}",
+				  data: request,
+				  success: response,
+				  dataType: 'json'
+				});
+			},
+			focus: function( event, ui ) {
+				$(this).val( _.get(ui, 'item.property_type', '') );
+				return false;
+			},
+			select: function( event, ui ) {
+				$(this).val( _.get(ui, 'item.property_type', ''))
+								.attr('data-id', _.get(ui, 'item.id', ''))
+									.attr('data-vendor', _.get(ui, 'item.vendor', ''));
+
+				return false;
+			}
+		})
+		.autocomplete().data("ui-autocomplete")._renderItem =  function( ul, item ) {
+			return $( "<li>" )
+			.append( "<a>" + _.get(item, 'property_type', '') + "</a>" )
 			.appendTo( ul );
 		};
 	});
@@ -67,7 +111,12 @@
 	});
 
 
-	$(document).on('keyup paste', '.contact', function(e) {
+	$(document).on('keyup paste', '.client-contact', function(e) {
+
+		if ($(this).val() != $(this).attr('data-mobile')) {
+			$(this).attr('data-token', '');
+		}
+
 		$(this).autocomplete({
 			minLength: 4,
 			source: function (request, response) {
@@ -92,13 +141,15 @@
 
 			select: function( event, ui ) {
 				$(this).val( _.get(ui, 'item.mobile', '') )
-								.attr('data-token', _.get(ui, 'item.token', ''));
-				$('span.name').text(_.get(ui, 'item.name', ''));
-				$('span.email').text(_.get(ui, 'item.email', ''));
+								.attr('data-token', _.get(ui, 'item.token', ''))
+									.attr('data-mobile', _.get(ui, 'item.mobile', ''));
+				$('.client-name').val(_.get(ui, 'item.name', ''));
+				$('.client-email').val(_.get(ui, 'item.email', ''));
 				return false;
 			}
 		})
 		.autocomplete().data("ui-autocomplete")._renderItem =  function( ul, item ) {
+
 			return $( "<li>" )
 			.append( "<a>" + _.get(item, 'name', '')+' ('+_.get(item, 'mobile', '')+')' + "</a>" )
 			.appendTo( ul );

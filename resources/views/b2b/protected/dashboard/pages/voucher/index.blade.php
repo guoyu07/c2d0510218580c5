@@ -13,8 +13,7 @@
 					</div>
 					<div class="col-md-8 col-sm-8 col-xs-8 text-right">
 						<label >Create Voucher for : </label>
-						<a href="{{ route('vouchers.create.activity') }}" class="btn btn-success">Activity</a>
-						<a href="{{ route('vouchers.create.accommodation') }}" class="btn btn-success">Accommodation</a>
+						<a href="{{ route('vouchers.create') }}" class="btn btn-success">Create</a>
 					</div>
 					<div class="col-md-1 col-sm-1 col-xs-1">
 						<ul class="nav navbar-right panel_toolbox panel_toolbox1">
@@ -51,7 +50,7 @@
 									<td>{{ $voucher->updated_at }}</td>
 									<td>{{ $voucher->status }}</td>
 									<td>
-										<a href="{{ $voucher->voucher_url }}" class="btn btn-success btn-xs btn-block" target="_blank">Open</a>
+										<a href="{{ $voucher->open_url }}" class="btn btn-success btn-xs btn-block" target="_blank">Open</a>
 									</td>
 								</tr>
 							@endforeach

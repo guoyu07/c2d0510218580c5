@@ -10,14 +10,8 @@ class VoucherModel extends Model
 	use CallTrait;
 
 	protected $table = 'vouchers';
-	protected $appends = ['uid', 'status', 'voucher_url'];
-	protected $casts = ['guests' => 'array', 'data' => 'array'];
-	protected $dates = [
-				'check_in',
-				'check_out',
-        'created_at',
-        'updated_at',
-    ];
+	protected $appends = ['uid', 'status', 'open_url'];
+
 
 	public function getUidAttribute()
 	{
@@ -25,10 +19,6 @@ class VoucherModel extends Model
 						.str_pad($this->id, 7, '0', STR_PAD_LEFT);
 	}
 
-	public function getTypeAttribute($value)
-	{
-		return proper($value);
-	}
 
 
 	public function getStatusAttribute()
@@ -37,10 +27,11 @@ class VoucherModel extends Model
 	}
 
 
-	public function getVoucherUrlAttribute()
+	public function getOpenUrlAttribute()
 	{
-		return route('vouchers.showPDF', $this->token);
+		return route('vouchers.show', $this->token);
 	}
+
 
 
 	public function scopeByUser($query)
@@ -60,6 +51,10 @@ class VoucherModel extends Model
 		return $this->belongsTo('App\Models\B2bApp\ClientModel', 'client_id');
 	}
 
+	public function voucherServices()
+	{
+		return $this->hasMany('App\Models\B2bApp\VoucherServiceModel', 'voucher_id');
+	}
 
 	public function user(){
 		return $this->belongsTo('App\User', 'user_id');
