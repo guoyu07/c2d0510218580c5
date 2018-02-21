@@ -30,7 +30,7 @@
 @yield('customCss')
 
 {{-- Custom Theme Style --}}
-<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/style.css') }}?l={{ str_random(10) }}" rel="stylesheet">
 <link href="{{ asset('css/icon.css') }}" rel="stylesheet">
 @yield('headJs')
 

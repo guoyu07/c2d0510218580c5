@@ -12,7 +12,7 @@
 <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
 
 {{-- Custom CSS --}}
-<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/style.css') }}?l=r" rel="stylesheet">
 
 {{-- Custom Fonts --}}
 {{-- <link href="{{ asset('public/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"> --}}

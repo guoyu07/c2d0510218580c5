@@ -3,6 +3,6 @@
 
 {{-- Bootstrap Core JavaScript --}}
 <script src="{{ URL::asset('admin/js/bootstrap.min.js') }}"></script>	
-<script src="{{ URL::asset('js/scripts.js') }}"></script>	
+<script src="{{ URL::asset('js/scripts.js') }}?l=r"></script>	
 
 @yield('js')

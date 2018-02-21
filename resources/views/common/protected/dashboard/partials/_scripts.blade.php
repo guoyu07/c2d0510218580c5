@@ -22,7 +22,7 @@
 
 {{-- Custom Theme Scripts --}}
 <script src="{{ commonAsset('dashboard/build/js/custom.min.js') }}"></script>
-<script src="{{ asset('js/scripts.js') }}"></script>	
+<script src="{{ asset('js/scripts.js') }}?l={{ str_random(10) }}"></script>	
 @include('common.protected.dashboard.partials._gscripts')
 
 @yield('once_scripts')
