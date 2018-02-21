@@ -56,7 +56,7 @@
 							</li>
 							<?php 
 								$pageNames = [
-										"accommodation" => "Accommodation",
+										"create" => "Create",
 										// "activity" => "Activity",
 									];
 							?>
