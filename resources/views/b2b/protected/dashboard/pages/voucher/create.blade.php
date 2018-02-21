@@ -151,10 +151,14 @@
 										dataType : "JSON",
 										success : function (res) {
 											token = _.get(res, 'token', '');
+											windata.ctoken = token;
+											$('.show-client-mobile').attr('data-token', token);
 										}
 									});
 								}
+
 								windata.ctoken = token;
+
 								$('.show-client-mobile').text(mobile)
 													.attr('data-token', token);
 								$('.show-client-name').text(name);
