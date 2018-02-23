@@ -485,7 +485,7 @@ function getStarImage($count, $width = 18, $height = 18){
 	
 	$html = '';
 	for($x = 1; $x <= $count; $x++) {
-		$html .= '<img src="'.urlImage('images/icon/star.gif').'" width="'.$width.'" height="'.$height.'">';
+		$html .= '<img src="/images/icon/star.gif" width="'.$width.'" height="'.$height.'">';
 	}
 	
 	return $html;
