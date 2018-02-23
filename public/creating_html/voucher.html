@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+			top : 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			margin: 0;
+			padding: 0;
+		}
+
+		.top-box{
+			height: 200px;
+			background-color: #ebebeb;
+
+		}
+		.rounded-bottom {
+		  border-bottom-left-radius: 60%;
+		  border-bottom-right-radius: 60%;
+		  display: block;
+		  /*border-bottom: 30px #959595 solid;*/
+		  border-top: 20px transparent solid;
+		  position: relative;
+		  /*top: -60px;*/
+		  overflow: hidden;
+		}
+
+		.middle-box{
+			height: 600px;
+			background-color: #fd6a08;
+			margin-left: auto;
+			margin-right: auto;
+			width: 65%
+		}
+
+		$size: 45px;
+
+		div {
+		  background: #9e978e;
+		  display: inline-block;
+		  margin: 0 1em 1em 0;
+		}
+
+		.top,
+		.bottom {
+		  height: 200px;
+		  width: 400px;
+		}
+
+		.bottom {
+		  border-bottom-left-radius: 400px;
+		  border-bottom-right-radius: 400px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<div class="middle-box">
+			<div class="top-box bottom"></div>
+		</div>
+	</div>
+</body>
+</html>

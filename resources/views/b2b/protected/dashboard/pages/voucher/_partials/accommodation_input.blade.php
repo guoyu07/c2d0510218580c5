@@ -29,8 +29,11 @@
 					<span class="fa fa-building-o form-control-feedback right" aria-hidden="true"></span>
 				</div>
 				<div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-					<input type="text" class="form-control prop-type" placeholder="Room Type">
+					<input type="text" {{-- list="prop_type"  --}} class="form-control prop-type" placeholder="Room Type">
 					<span class="fa fa-bookmark-o form-control-feedback right" aria-hidden="true"></span>
+					{{-- <datalist id="prop_type">
+					  <option value="Firefox">
+					</datalist> --}}
 				</div>
 				<div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
 					<div class="row">

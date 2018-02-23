@@ -34,7 +34,12 @@ class VoucherController extends Controller
 	public function show($token)
 	{
 		$voucher = $this->model()->byToken($token)->firstOrFail();
-		return view($this->viewPath.'.show', ['data' => $voucher]);
+
+		$blade = [
+					'data' => $voucher,
+					'isCreate' => 0,
+				];
+		return view($this->viewPath.'.show', $blade);
 	}
 
 
@@ -42,15 +47,43 @@ class VoucherController extends Controller
 	{
 		$voucher = VoucherServiceModel::byToken($token)->firstOrFail();
 		// dd($voucher->accommodation_details->star_rating);
-		$html = view($this->viewPath.'.html.voucher', ['data' => $voucher])->render();
+		$html = view($this->viewPath.'.html.new_voucher', ['data' => $voucher])->render();
 		// return $html;
 		return PdfController::call()->createPdf($voucher->uid, $html);
+	}
+
+	public function showTestPDF()
+	{
+		$html = view('test.voucher')->render();
+		// return $html;
+
+		return PdfController::call()->createPdf('pdf', $html);
 	}
 
 
 	public function create()
 	{
-		return view($this->viewPath.'.create');
+		return view($this->viewPath.'.create', ['isCreate' => 1]);
+	}
+
+
+	public function createAndShow($token='')
+	{
+		$voucher = [];
+		$isCreate = 1;
+
+		if (strlen($token) > 10) {
+			$voucher =  $this->model()->byToken($token)->firstOrFail();
+			// dd($voucher->voucherServices->pluck('built_data', 'token'));
+			$isCreate = 0;
+		}
+
+		$blade = [
+					'data' => $voucher,
+					'isCreate' => $isCreate,
+				];
+
+		return view($this->viewPath.'.create', $blade);
 	}
 
 
@@ -72,7 +105,7 @@ class VoucherController extends Controller
 
 	public function postStoreData(Request $request)
 	{
-		$voucher = $this->model()->find($request->vtoken);
+		$voucher = $this->model()->byToken($request->vtoken)->first();
 		
 		if (is_null($voucher)) {
 			$client = ClientModel::byToken($request->ctoken)->firstOrFail();
@@ -84,7 +117,13 @@ class VoucherController extends Controller
 		$service = $request->all();
 
 		// foreach ($request->services as $service) {
-		$voucherService = new VoucherServiceModel;
+		$voucherService = VoucherServiceModel::byToken($request->vstoken)
+												->first();
+
+		if (is_null($voucherService)) {
+			$voucherService = new VoucherServiceModel;
+		}
+		
 		$voucherService->type = array_get($service, 'type');
 		$voucherService->voucher_id = $voucher->id;
 		$voucherService->destination_id = array_get($service, 'dest_id');
@@ -106,16 +145,6 @@ class VoucherController extends Controller
 					]);
 	}
 
-
-	public function showAccommodationVoucher($token){
-
-	}
-
-
-	public function createAccommodationVoucher()
-	{
-		return view($this->viewPath.'.accommodation');
-	}
 
 
 	public function postShowAccommodation(Request $request)

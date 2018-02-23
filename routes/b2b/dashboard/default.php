@@ -45,18 +45,14 @@
 
 		Route::get('show/pdf/{token}', 'VoucherController@showPDF')
 						->name('vouchers.showPDF');
+		
+		Route::get('show/testpdf', 'VoucherController@showTestPDF');
 
-		Route::get('show/{token}', 'VoucherController@show')
+		Route::get('show/{token?}', 'VoucherController@createAndShow')
 						->name('vouchers.show');
 
-		Route::get('create', 'VoucherController@create')
+		Route::get('create', 'VoucherController@createAndShow')
 						->name('vouchers.create');
-
-
-		Route::get('activity', 'VoucherController@createActivityVoucher')
-						->name('vouchers.create.activity');
-
-		Route::get('accommodation', 'VoucherController@createAccommodationVoucher')->name('vouchers.create.accommodation');
 
 		Route::get('/', 'VoucherController@index')
 						->name('vouchers.index');

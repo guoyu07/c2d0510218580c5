@@ -31,6 +31,12 @@
 									.attr('data-image', _.get(ui, 'item.image', ''))
 										.attr('data-vendor', _.get(ui, 'item.vendor', ''));
 
+				windata.getAccommodationProps({
+								'_token':csrf_token,
+								'id':_.get(ui, 'item.code', ''),
+								'vendor':_.get(ui, 'item.vendor', '')
+								});
+
 				return false;
 			}
 		})
@@ -41,13 +47,13 @@
 		};
 	});
 
-	$(document).on('keyup paste', '.prop-type', function(e) {
+	$(document).on('keyup paste focus', '.prop-type', function(e) {
 		var parent = $(this).closest('.accommodation-popup-box');
 		var accommo = $(parent).find('input.accommo-name');
 
 		$(this).autocomplete({
-			minLength: 4,
-			source: function (request, response) {
+			minLength: 0,
+			source: windata.properties /*function (request, response) {
 				request = $.extend(request, {
 					'format' : 'json',
 					'_token' : csrf_token,
@@ -61,7 +67,7 @@
 				  success: response,
 				  dataType: 'json'
 				});
-			},
+			}*/,
 			focus: function( event, ui ) {
 				$(this).val( _.get(ui, 'item.property_type', '') );
 				return false;

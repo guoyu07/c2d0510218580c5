@@ -1,5 +1,10 @@
 @extends('b2b.protected.dashboard.main')
 
+@section('css')
+  <link rel="stylesheet" href="{{ commonAsset('css/themes/smoothness/jquery-ui.css') }}">
+  <link rel="stylesheet" href="{{ commonAsset('datepicker/bootstrap-datepicker.css') }}">
+@endsection
+
 @section('content')
 <div class="row">
 	<div class="col-md-12 col-sm-12 col-xs-12">
@@ -61,6 +66,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 m-top-10">
 							<a href="{{ $voucherService->voucher_url }}" class="btn btn-success" target="_blank">Get Voucher</a>
+							<button class="btn btn-primary btn-primary btn-service-edit" data-vstoken="{{$voucherService->token}}">Edit</button>
 						</div>
 					</div>
 				</div>
@@ -68,5 +74,24 @@
 		</div>
 	@endforeach
 </div>
+
+<div class="hide">
+	@include('b2b.protected.dashboard.pages.voucher._partials.client_input')
+	@include('b2b.protected.dashboard.pages.voucher._partials.accommodation_input')
+	@include('b2b.protected.dashboard.pages.voucher._partials.activity_input')
+</div>
 @endsection
 
+@section('js')
+
+	{{-- bootstrap-daterangepicker --}}
+	<script type="text/javascript" src="{{ commonAsset('js/jquery-ui-2.js') }}"></script>
+	<script src="{{ commonAsset('dashboard/js/moment/moment.min.js') }}"></script>
+	<script src="{{ commonAsset('dashboard/js/datepicker/daterangepicker.js') }}"></script>
+	{{-- /bootstrap-daterangepicker --}}
+
+@endsection
+
+@section('scripts')
+	@include('b2b.protected.dashboard.pages.voucher._partials._scripts')
+@endsection 

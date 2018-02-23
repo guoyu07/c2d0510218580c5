@@ -9,7 +9,11 @@ use App\Http\Controllers\HotelApp\HotelsController;
 class VoucherServiceModel extends Model
 {
 	protected $table = 'voucher_services';
-	protected $appends = ['uid', 'status', 'voucher_url', 'meals', 'accommodation_details'];
+	protected $appends = [
+					'uid', 'status', 'voucher_url', 
+					'meals', 'accommodation_details',
+					'built_data'
+				];
 	protected $casts = ['guests' => 'array', 'data' => 'array'];
 
 	protected $dates = [
@@ -17,7 +21,7 @@ class VoucherServiceModel extends Model
 			'check_out',
 			'created_at',
 			'updated_at',
-	];
+		];
 
 	public function getUidAttribute()
 	{
@@ -53,6 +57,23 @@ class VoucherServiceModel extends Model
 	}
 
 
+	public function getBuiltDataAttribute()
+	{
+		return [		
+			'vstoken' => $this->token,
+			'type' => $this->type,
+			'dest' => $this->destination->location,
+			'dest_id' => $this->destination_id,
+			'check_in' => $this->check_in->format('d/m/Y'),
+			'check_out' => $this->check_out->format('d/m/Y'),
+			'data' => $this->data,
+			'guests' => $this->guests,
+			'terms' => $this->terms,
+			'remark' => $this->remark,
+		];
+	}
+
+
 	public function scopeByToken($query, $token)
 	{
 		return $query->where('token', $token);
@@ -62,6 +83,12 @@ class VoucherServiceModel extends Model
 	public function voucher()
 	{
 		return $this->belongsTo('App\Models\B2bApp\VoucherModel', 'voucher_id');
+	}
+
+
+	public function destination()
+	{
+		return $this->belongsTo('App\Models\CommonApp\DestinationModel', 'destination_id');
 	}
 
 
